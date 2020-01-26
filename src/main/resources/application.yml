@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+    username: root
+    password: root
+
+
+  #配置 springdataJPA
+  jpa:
+    show-sql: true
+
+
+server:
+  port: 8885
+  servlet:
+    context-path: /sell
+
+
+
+#logging:
+#  pattern:
+#    console: "%d - %msg%n"
+#    file: /Users/meiyukai/Downloads/sell.log
+##  path: /Users/meiyukai/Downloads/
+
+
+
+
+mybatis:
+  type-aliases-package:  com.meiyukai.domain
+  type-handlers-package:  com.meiyukai.dao
