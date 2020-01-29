@@ -44,6 +44,12 @@
             <version>1.1.1</version>
         </dependency>
 
+        <!--springBoot data jpa-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
         <!--mysql 的连接-->
         <dependency>
             <groupId>mysql</groupId>
@@ -51,7 +57,7 @@
         </dependency>
 
 
-
+        <!--插件 LomBok 的使用-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
