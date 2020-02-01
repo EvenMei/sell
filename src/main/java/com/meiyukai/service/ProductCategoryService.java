@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductCategoryService {
 
     /**
-     * 查询所有的产品
+     * 查询所有商品种类信息
      * @return
      */
     public List<ProductCategory> findAll();

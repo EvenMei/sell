@@ -11,6 +11,7 @@ import java.util.List;
 @Service(value = "productCategoryService")
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
+
     @Resource(name = "productCategoryRepository")
     private ProductCategoryRepository productCategoryRepository;
 
