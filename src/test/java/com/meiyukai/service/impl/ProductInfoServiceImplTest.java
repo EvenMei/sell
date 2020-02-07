@@ -51,14 +51,14 @@ public class ProductInfoServiceImplTest {
     public void saveProductInfo() {
 
         ProductInfo pi = new ProductInfo();
-        pi.setProductId("002");
-        pi.setCategoryType(1);
-        pi.setProductDescription("很好吃的皮蛋瘦肉粥");
+        pi.setProductId("003");
+        pi.setCategoryType(2);
+        pi.setProductDescription("川味麻辣香锅");
         pi.setProductIcon("http://XXX.jpeg");
-        pi.setProductPrice(new BigDecimal(20.0));
-        pi.setProductStock(88);
+        pi.setProductPrice(new BigDecimal(45.0));
+        pi.setProductStock(100);
         pi.setProductStatus(0);
-        pi.setProductName("皮蛋瘦肉粥");
+        pi.setProductName("麻辣香锅");
         productInfoService.saveProductInfo(pi);
 
     }

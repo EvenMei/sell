@@ -1,6 +1,7 @@
 package com.meiyukai.service;
 
 import com.meiyukai.domain.ProductInfo;
+import com.meiyukai.dto.CartDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -40,7 +41,7 @@ public interface ProductInfoService {
      * 加库存
      */
 
-
+    public void increaseStock(List<CartDTO> cartDTOList);
 
 
 
@@ -48,6 +49,10 @@ public interface ProductInfoService {
     /**
      * 减库存
      */
+
+    public void decreaseStock(List<CartDTO> cartDTOList);
+
+
 
 
 

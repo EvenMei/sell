@@ -1,0 +1,181 @@
+package com.meiyukai.service.impl;
+
+import com.meiyukai.converter.OrderMaster2OrderDTOConverter;
+import com.meiyukai.dao.OrderDetailRepository;
+import com.meiyukai.dao.OrderMasterRepository;
+import com.meiyukai.domain.OrderDetail;
+import com.meiyukai.domain.OrderMaster;
+import com.meiyukai.domain.ProductInfo;
+import com.meiyukai.dto.CartDTO;
+import com.meiyukai.dto.OrderDTO;
+import com.meiyukai.enums.OrderStatusEnum;
+import com.meiyukai.enums.PayStatusEnum;
+import com.meiyukai.enums.ResultEnum;
+import com.meiyukai.exception.SellException;
+import com.meiyukai.service.OrderService;
+import com.meiyukai.service.ProductCategoryService;
+import com.meiyukai.service.ProductInfoService;
+import com.meiyukai.utils.KeyUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service(value = "orderService")
+@Transactional
+@Slf4j
+public class OrderServiceImpl implements OrderService {
+
+    @Resource(name = "productInfoService")
+    private ProductInfoService productInfoService;
+    
+    @Resource(name = "productCategoryService")
+    private ProductCategoryService productCategoryService;
+
+    @Resource(name = "orderDetailRepository")
+    private OrderDetailRepository orderDetailRepository;
+
+    @Resource(name = "orderMasterRepository")
+    private OrderMasterRepository orderMasterRepository;
+
+
+            
+            
+
+    @Override
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+
+        String orderId = KeyUtil.genUniqueKey();
+        BigDecimal orderAmount = new BigDecimal(0);
+//        ArrayList<CartDTO> cartDTOList = new ArrayList<>();
+
+
+        // 1. 查询商品的数量 价格
+        for(OrderDetail orderDetail  :  orderDTO.getOrderDetailList()){
+            ProductInfo productInfo = productInfoService.findProductInfoById(orderDetail.getProductId());
+
+            if(productInfo == null){
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            }
+
+
+            // 2. 计算总价
+            BeanUtils.copyProperties(productInfo , orderDetail);
+            orderAmount = orderAmount.add(orderDetail.getProductPrice().multiply(new BigDecimal(orderDetail.getProductQuantity())));
+
+
+            // 订单详情入库
+
+            orderDetail.setOrderId(orderId);
+            orderDetail.setDetailId(KeyUtil.genUniqueKey());
+            orderDetailRepository.save(orderDetail);
+
+
+            /*CartDTO cartDTO =  new CartDTO(orderDetail.getProductId() ,  orderDetail.getProductQuantity());
+            cartDTOList.add(cartDTO);*/
+        }
+
+
+
+        // 3. 写入订单数据库(orderMaster  和  orderDetail)
+        OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO ,  orderMaster);
+        orderMaster.setOrderId(orderId);
+        orderMaster.setOrderAmount(orderAmount);
+        System.out.println("orderMaster ======= >  " + orderMaster);
+        orderMasterRepository.save(orderMaster);
+
+
+
+        //4. 扣除库存
+        List<CartDTO> cartDTOList  = orderDTO.getOrderDetailList().stream().map(e-> new CartDTO(e.getProductId() , e.getProductQuantity()))
+                .collect(Collectors.toList());
+        productInfoService.decreaseStock(cartDTOList);
+
+        return orderDTO;
+    }
+
+    @Override
+    public OrderDTO findOne(String orderID) {
+        OrderDTO orderDTO =  new OrderDTO();
+        OrderMaster orderMaster = orderMasterRepository.findById(orderID).get();
+        if(orderMaster == null){
+            throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
+        }
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderID);
+        if(CollectionUtils.isEmpty(orderDetailList)){
+            throw new SellException(ResultEnum.ORDERDETAIL_NOT_EXISTS);
+        }
+        BeanUtils.copyProperties(orderMaster , orderDTO);
+        orderDTO.setOrderDetailList(orderDetailList);
+        return orderDTO;
+    }
+
+    @Override
+    public Page<OrderDTO> findOrderList(String buyerOpenid, Pageable pageable) {
+
+        Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
+        List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
+
+        return new PageImpl<OrderDTO>(orderDTOList, pageable , orderMasterPage.getTotalElements() );
+    }
+
+    @Override
+    @Transactional
+    public OrderDTO cancel(OrderDTO orderDTO) {
+        OrderMaster orderMaster = new OrderMaster();
+        //判断一下订单的状态 : 只有新订单才可以取消
+        if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.info("【取消订单】订单状态不正确  orderId = {} , orderStatus={}  " ,orderDTO.getOrderId() , orderDTO.getOrderStatus());
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+
+        // 修改订单状态
+        orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        BeanUtils.copyProperties(orderDTO , orderMaster);
+        OrderMaster orderMasterCanceled = orderMasterRepository.save(orderMaster);
+        System.out.println("--- 【orderMasterCanceled  :  】--- " + orderMasterCanceled);
+        if(orderMasterCanceled == null){
+            log.error("【取消订单】 更新失败   orderMaster={}  " , orderMaster);
+            throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
+        }
+
+        // 返还库存
+        if (CollectionUtils.isEmpty(orderDTO.getOrderDetailList())) {
+            log.info("【取消订单】 返回库存失败 orderDetailList = {}" , orderDTO.getOrderDetailList());
+            throw new SellException(ResultEnum.ORDER_DETAIL_EMPTY);
+        }
+        List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e -> new CartDTO(e.getProductId(), e.getProductQuantity())).collect(Collectors.toList());
+        productInfoService.increaseStock(cartDTOList);
+
+        // 如果已经支付 就退款
+        if(orderDTO.getPayStatus().equals( PayStatusEnum.SUCCESS.getCode())){
+            //TODO  退款
+            System.out.println("OrderId :  " +orderDTO.getOrderId()  +  "      " +"--- ---  此处应当退款给 ： " +orderDTO.getBuyerName());
+        }
+
+        return orderDTO;
+    }
+
+    @Override
+    public OrderDTO finish(OrderDTO orderDTO) {
+        return null;
+    }
+
+    @Override
+    public OrderDTO paid(OrderDTO orderDTO) {
+        return null;
+    }
+}
