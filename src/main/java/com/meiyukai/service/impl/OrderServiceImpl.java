@@ -170,12 +170,54 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
-        return null;
+
+        // 判断订单状态
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.error("【完结订单】 订单状态错误  orderDTO={}" , orderDTO);
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+
+
+        //修改订单状态
+        OrderMaster orderMaster =  new OrderMaster();
+        orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        BeanUtils.copyProperties(orderDTO , orderMaster);
+        OrderMaster orderMasterUpdate = orderMasterRepository.save(orderMaster);
+        if (orderMasterUpdate == null){
+            log.error("【完结订单】更新失败  orderMaster={}" , orderMaster);
+            throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
+        }
+        return orderDTO;
     }
 
     @Override
+    @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
-        return null;
+
+        // 判断订单的状态
+        if(!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+            log.error("【支付】 订单状态错误  orderDTO={} " , orderDTO);
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+
+        //判断支付的状态
+        if (!orderDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())){
+            log.error("【支付】支付状态错误 orderDTO = {} " , orderDTO);
+            throw new SellException(ResultEnum.ORDER_PAY_STATUS_ERROR);
+        }
+        //修改支付的状态
+        //TODO 支付订单
+        OrderMaster orderMaster = new OrderMaster();
+        orderDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        BeanUtils.copyProperties(orderDTO , orderMaster);
+        OrderMaster paidOrderMaster = orderMasterRepository.save(orderMaster);
+        if(paidOrderMaster == null){
+            log.error("【支付】 订单支付失败  orderDTO={} " , orderDTO);
+            throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
+        }
+        return orderDTO;
     }
+
 }

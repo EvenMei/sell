@@ -86,11 +86,17 @@ public class OrderServiceImplTest {
 
     @Test
     public void finish() {
-
+        String orderId =  "1580907410938979155";
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        OrderDTO finishedOrderDTO = orderService.finish(orderDTO);
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(),  finishedOrderDTO.getOrderStatus()) ;
     }
 
     @Test
     public void paid() {
-
+        String orderId =  "1580907410938979155";
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        OrderDTO paidOrderDTO = orderService.paid(orderDTO);
+        Assert.assertEquals(paidOrderDTO.getPayStatus() , PayStatusEnum.SUCCESS.getCode());
     }
 }
