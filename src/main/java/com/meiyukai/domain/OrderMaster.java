@@ -43,8 +43,8 @@ public class OrderMaster implements Serializable {
     private Integer payStatus = PayStatusEnum.WAIT.getCode(); // 默认是0 等待支付
 
 
-    /*@Column(name = "create_time")
-    private Date createTime;*/
+    @Column(name = "create_time")
+    private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;

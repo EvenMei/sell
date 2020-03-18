@@ -1,20 +1,47 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.108:3306/sell?characterEncoding=utf-8
+    url: jdbc:mysql://118.31.19.39:3306/sell?characterEncoding=utf-8
     username: root
-    password: 123456
+    password: root
+    hikari:
+      minimum-idle: 1
+      connection-timeout: 36000000
+      max-lifetime: 36000000
+
 
 
   #配置 springdataJPA
   jpa:
     show-sql: true
+  jackson:
+    default-property-inclusion: non_null  # 全局 jsonInclude.Include.NOT_NULL
+
+
+
+# mvc:
+      ##    view:
+    ##      prefix: "/"
+    ##      suffix: ".ftl"
+
+
+
 
 
 server:
   port: 8885
   servlet:
     context-path: /sell
+
+
+
+wechat:
+    mpAppid: wx59a58f94139b9dec
+    mpAppSecret: 303a604d54da79c22fbb1e976d58990d
+    mchId: 1579677461
+    mchKey: meiyukai520shenye131411111111111
+    keyPath: /Users/meiyukai/Documents/wechat_cert/1579677461_20200315_cert.zip
+    notifyUrl: http://xiaomei.natapp1.cc/sell/pay/notify
 
 
 
@@ -25,8 +52,7 @@ server:
 ##  path: /Users/meiyukai/Downloads/
 
 
-
-
 mybatis:
   type-aliases-package:  com.meiyukai.domain
   type-handlers-package:  com.meiyukai.dao
+

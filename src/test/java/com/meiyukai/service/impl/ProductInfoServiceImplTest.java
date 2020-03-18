@@ -34,7 +34,7 @@ public class ProductInfoServiceImplTest {
 
     @Test
     public void findAllByPage() {
-        PageRequest pageable = new PageRequest(0,1);
+        PageRequest pageable = PageRequest.of(0,1);
 //        Pageable request = PageRequest.of(0,1);   // 上面的方法过期了， 可以使用这个方法代替
         Page<ProductInfo> list = productInfoService.findAllByPage(pageable);
         System.out.println("list  :  " + list.getContent());

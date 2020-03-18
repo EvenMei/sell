@@ -91,9 +91,9 @@ public class OrderServiceImpl implements OrderService {
 
         // 3. 写入订单数据库(orderMaster  和  orderDetail)
         OrderMaster orderMaster = new OrderMaster();
+        orderDTO.setOrderId(orderId);
+        orderDTO.setOrderAmount(orderAmount);
         BeanUtils.copyProperties(orderDTO ,  orderMaster);
-        orderMaster.setOrderId(orderId);
-        orderMaster.setOrderAmount(orderAmount);
         System.out.println("orderMaster ======= >  " + orderMaster);
         orderMasterRepository.save(orderMaster);
 
@@ -106,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
         return orderDTO;
     }
+
 
     @Override
     public OrderDTO findOne(String orderID) {

@@ -7,6 +7,7 @@ import com.meiyukai.enums.ProductStatus;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import com.meiyukai.service.ProductInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service(value = "productInfoService")
+@Slf4j
 public class ProductInfoServiceImpl implements ProductInfoService {
     @Resource(name = "productInfoRepository")
     private ProductInfoRepository productInfoRepository;
@@ -36,7 +38,16 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     public ProductInfo findProductInfoById(String  id) {
-        return productInfoRepository.findById(id).get();
+        ProductInfo productInfo = new ProductInfo();
+        try{
+            productInfo = productInfoRepository.findById(id).get();
+        }catch (Exception e){
+                log.error("【查询商品】 商品不存在  productInfoId={} " , id);
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+
+
+        return productInfo;
     }
 
     @Override

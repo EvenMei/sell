@@ -1,5 +1,4 @@
 package com.meiyukai.service.impl;
-
 import com.meiyukai.domain.ProductCategory;
 import com.meiyukai.service.ProductCategoryService;
 import org.junit.Test;

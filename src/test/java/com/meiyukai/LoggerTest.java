@@ -1,5 +1,6 @@
 package com.meiyukai;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,10 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sun.management.snmp.util.MibLogger;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
+//@Slf4j
 public class LoggerTest {
     private MibLogger log;
 
@@ -22,7 +22,7 @@ public class LoggerTest {
 
         String name = "hello ";
         String password = "123456";
-//        log.info("name : {}  ,  password: {} " , name , password );   // { } 是一个占位符
+       // log.info("name : {}  ,  password: {} " , name , password );   // { } 是一个占位符
 
        /* logger.debug("logger ... ... ");
         logger.info("info ... ... ");

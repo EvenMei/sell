@@ -1,5 +1,7 @@
 package com.meiyukai.converter;
 
+import com.meiyukai.dao.OrderDetailRepository;
+import com.meiyukai.domain.OrderDetail;
 import com.meiyukai.domain.OrderMaster;
 import com.meiyukai.dto.OrderDTO;
 import org.springframework.beans.BeanUtils;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
  */
 
 public class OrderMaster2OrderDTOConverter {
+
 
     public static OrderDTO convert(OrderMaster orderMaster ){
         OrderDTO orderDTO =  new OrderDTO();

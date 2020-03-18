@@ -38,9 +38,6 @@ public class BuyerProductController {
 
 //        ResultVO resultVO =  new ResultVO();
 
-
-
-
         //1.查询所有的上架产品
         List<ProductInfo> productInfoList =  productInfoService.findUpAll();
 
@@ -86,6 +83,8 @@ public class BuyerProductController {
         return ResultVOUtil.success(productVOList);
 
     }
+
+
 
 
 
