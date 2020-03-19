@@ -1,5 +1,6 @@
 package com.meiyukai.service.impl;
 
+import com.lly835.bestpay.model.RefundResponse;
 import com.meiyukai.converter.OrderMaster2OrderDTOConverter;
 import com.meiyukai.dao.OrderDetailRepository;
 import com.meiyukai.dao.OrderMasterRepository;
@@ -13,8 +14,10 @@ import com.meiyukai.enums.PayStatusEnum;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import com.meiyukai.service.OrderService;
+import com.meiyukai.service.PayService;
 import com.meiyukai.service.ProductCategoryService;
 import com.meiyukai.service.ProductInfoService;
+import com.meiyukai.utils.JsonUtil;
 import com.meiyukai.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -49,6 +52,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource(name = "orderMasterRepository")
     private OrderMasterRepository orderMasterRepository;
+
+    @Resource(name = "payService")
+    private PayService payService;
 
 
             
@@ -116,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
             throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
         }
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderID);
+
         if(CollectionUtils.isEmpty(orderDetailList)){
             throw new SellException(ResultEnum.ORDERDETAIL_NOT_EXISTS);
         }
@@ -134,6 +141,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<OrderDTO> findAllOrderList(Pageable pageable) {
+        Page<OrderMaster> orderList = orderMasterRepository.findAll(pageable);
+
+        List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderList.getContent());
+        Page page = new PageImpl(orderDTOList , pageable , orderList.getTotalElements());
+         return  page;
+    }
+
+    @Override
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
         OrderMaster orderMaster = new OrderMaster();
@@ -146,8 +162,8 @@ public class OrderServiceImpl implements OrderService {
         // 修改订单状态
         orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         BeanUtils.copyProperties(orderDTO , orderMaster);
-        OrderMaster orderMasterCanceled = orderMasterRepository.save(orderMaster);
-        System.out.println("--- 【orderMasterCanceled  :  】--- " + orderMasterCanceled);
+        OrderMaster orderMasterCanceled = orderMasterRepository.save(orderMaster);  // 更新订单状态
+        System.out.println("--- 【orderMasterCanceled  :  】--- " + orderMasterCanceled);  //
         if(orderMasterCanceled == null){
             log.error("【取消订单】 更新失败   orderMaster={}  " , orderMaster);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
@@ -165,6 +181,7 @@ public class OrderServiceImpl implements OrderService {
         if(orderDTO.getPayStatus().equals( PayStatusEnum.SUCCESS.getCode())){
             //TODO  退款
             System.out.println("OrderId :  " +orderDTO.getOrderId()  +  "      " +"--- ---  此处应当退款给 ： " +orderDTO.getBuyerName());
+            payService.refund(orderDTO);
         }
 
         return orderDTO;
@@ -219,6 +236,13 @@ public class OrderServiceImpl implements OrderService {
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
         return orderDTO;
+    }
+
+    @Override
+    public List<String> getOrderName(OrderDTO orderDTO) {
+        List<OrderDetail> orderDetailList = orderDTO.getOrderDetailList();
+        List<String> orderName = orderDetailList.stream().map(e -> e.getProductName()).collect(Collectors.toList());
+        return orderName;
     }
 
 }

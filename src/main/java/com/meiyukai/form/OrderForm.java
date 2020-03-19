@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 public class OrderForm implements Serializable {
-    @NotEmpty(message = "姓名比填")
+    @NotEmpty(message = "姓名必填")
     private String name;
 
     @NotEmpty(message = "电话必填")

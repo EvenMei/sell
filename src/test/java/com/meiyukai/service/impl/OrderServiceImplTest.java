@@ -5,12 +5,14 @@ import com.meiyukai.dto.OrderDTO;
 import com.meiyukai.enums.OrderStatusEnum;
 import com.meiyukai.enums.PayStatusEnum;
 import com.meiyukai.service.OrderService;
+import com.meiyukai.utils.JsonUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -99,4 +101,20 @@ public class OrderServiceImplTest {
         OrderDTO paidOrderDTO = orderService.paid(orderDTO);
         Assert.assertEquals(paidOrderDTO.getPayStatus() , PayStatusEnum.SUCCESS.getCode());
     }
+
+    @Test
+    public void getOrderNameTest(){
+        OrderDTO orderDTO = orderService.findOne("1584290452337113548");
+        List<String> orderName = orderService.getOrderName(orderDTO);
+        System.out.println(JsonUtil.toJson(orderName));
+    }
+
+    @Test
+    public void findAllOrderListTest(){
+        Pageable pageable = PageRequest.of(0,2);
+        Page<OrderDTO> orderDTOList = orderService.findAllOrderList(pageable);
+        System.out.println("---- ---- orderDTOList ---- ---- "+ JsonUtil.toJson(orderDTOList.getContent()));
+    }
+
+
 }

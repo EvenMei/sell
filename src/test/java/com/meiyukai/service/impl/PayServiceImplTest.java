@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -26,9 +27,16 @@ public class PayServiceImplTest {
 
     @Test
     public void  testCreate(){
-        OrderDTO orderDTO  = orderService.findOne("1584255926777759962");
+        OrderDTO orderDTO  = orderService.findOne("1584520926965632078");
         log.info("【查询订单】orderDTO = {}" , orderDTO);
         payService.create(orderDTO);
+    }
+
+
+    @Test
+    public  void  refundTest(){
+        OrderDTO orderDTO = orderService.findOne("1584544790050369843");
+        payService.refund(orderDTO);
     }
 
 

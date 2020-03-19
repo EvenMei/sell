@@ -3,6 +3,8 @@ package com.meiyukai.service.impl;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.PayRequest;
 import com.lly835.bestpay.model.PayResponse;
+import com.lly835.bestpay.model.RefundRequest;
+import com.lly835.bestpay.model.RefundResponse;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.meiyukai.dto.OrderDTO;
 import com.meiyukai.enums.ResultEnum;
@@ -14,9 +16,12 @@ import com.meiyukai.utils.MathUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service(value = "payService")
 @Slf4j
@@ -33,17 +38,26 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public PayResponse create(OrderDTO orderDTO) {
+
+        //  获取用户订单的名称
+        List<String> orderName = orderService.getOrderName(orderDTO);
+        if (CollectionUtils.isEmpty(orderName)){
+            log.info(" 【获取订单名称】订单名称 为空 orderId = {}" ,orderDTO.getOrderId() );
+            throw new SellException(ResultEnum.ORDER_NAME_EMPTY);
+        }
+
+        // 生成付款请求
         PayRequest payRequest = new PayRequest();
         payRequest.setOpenid(orderDTO.getBuyerOpenid());
         payRequest.setOrderAmount(orderDTO.getOrderAmount().doubleValue());
         payRequest.setOrderId(orderDTO.getOrderId());
-        payRequest.setOrderName("test_订单");
-        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
+        payRequest.setOrderName(orderName.toString());
+        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_MP);
 
         log.error("【微信支付】微信支付请求  ，  payRequest={}" , JsonUtil.toJson(payRequest));
 
         PayResponse payResponse = bestPayService.pay(payRequest);
-        log.error("【微信支付 】 微信支付结果 ： payResponse ={}" +JsonUtil.toJson(payResponse));
+        log.error("【微信支付 】 微信支付结果 ： payResponse ={}" ,JsonUtil.toJson(payResponse));
 
         return payResponse;
 
@@ -59,7 +73,7 @@ public class PayServiceImpl implements PayService {
 
 
         PayResponse payResponse = bestPayService.asyncNotify(notifyData);
-        log.info("【微信支付 】异步通知  payResponse = {}" , payResponse);
+        log.info("【微信支付 】异步通知  payResponse = {}" , JsonUtil.toJson(payResponse));
 
         //查询订单
         OrderDTO orderDTO = orderService.findOne(payResponse.getOrderId());
@@ -67,6 +81,7 @@ public class PayServiceImpl implements PayService {
             log.error(" 【微信支付 】订单不存在 ： orderId ={}"  , orderDTO.getOrderId() );
             throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
         }
+
 
         //判断金额是否一致
         if(!MathUtil.equals(orderDTO.getOrderAmount().doubleValue() , payResponse.getOrderAmount())  ){
@@ -79,6 +94,18 @@ public class PayServiceImpl implements PayService {
         orderService.paid(orderDTO);
 
         return payResponse;
+    }
+
+    @Override
+    public RefundResponse refund(OrderDTO orderDTO) {
+        RefundRequest refundRequest = new RefundRequest();
+        refundRequest.setOrderAmount(orderDTO.getOrderAmount().doubleValue());
+        refundRequest.setOrderId(orderDTO.getOrderId());
+        refundRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_MP);
+        log.info("【微信退款】 refundRequest = {}"  , JsonUtil.toJson(refundRequest));
+        RefundResponse refundResponse = bestPayService.refund(refundRequest);
+        log.info(" 【微信退款 】 refundResponse = {}" , JsonUtil.toJson(refundResponse));
+        return refundResponse;
     }
 
 

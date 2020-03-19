@@ -17,12 +17,13 @@ spring:
   jackson:
     default-property-inclusion: non_null  # 全局 jsonInclude.Include.NOT_NULL
 
+#  mvc:
+#    view:
+#      prefix: "/pay/"
+#      suffix: ".ftl"
 
 
-# mvc:
-      ##    view:
-    ##      prefix: "/"
-    ##      suffix: ".ftl"
+
 
 
 
@@ -40,7 +41,7 @@ wechat:
     mpAppSecret: 303a604d54da79c22fbb1e976d58990d
     mchId: 1579677461
     mchKey: meiyukai520shenye131411111111111
-    keyPath: /Users/meiyukai/Documents/wechat_cert/1579677461_20200315_cert.zip
+    keyPath: /Users/meiyukai/Documents/wechat_cert/1579677461_20200315_cert/apiclient_cert.p12
     notifyUrl: http://xiaomei.natapp1.cc/sell/pay/notify
 
 

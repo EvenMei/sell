@@ -1,6 +1,6 @@
 package com.meiyukai.config;
 
-import com.lly835.bestpay.config.WxPayH5Config;
+import com.lly835.bestpay.config.WxPayConfig;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,20 +15,23 @@ public class wechatPayConfig {
     @Bean
     public BestPayServiceImpl  bestPayService(){
         BestPayServiceImpl bestPayService = new BestPayServiceImpl();
-        bestPayService.setWxPayH5Config(wxPayH5Config());
+        bestPayService.setWxPayConfig(wxPayConfig());
         return bestPayService;
     }
 
+
+
     @Bean
-    WxPayH5Config wxPayH5Config(){
-        WxPayH5Config wxPayH5Config = new WxPayH5Config();
-        wxPayH5Config.setAppId(wechatAccountConfig.getMpAppid());
-        wxPayH5Config.setAppSecret(wechatAccountConfig.getMpAppSecret());
-        wxPayH5Config.setMchId(wechatAccountConfig.getMchId());
-        wxPayH5Config.setMchKey(wechatAccountConfig.getMchKey());
-        wxPayH5Config.setKeyPath(wechatAccountConfig.getKeyPath());
-        wxPayH5Config.setNotifyUrl(wechatAccountConfig.getNotifyUrl());
-        return wxPayH5Config;
+    WxPayConfig wxPayConfig(){
+        WxPayConfig wxPayConfig = new WxPayConfig();
+        wxPayConfig.setAppId(wechatAccountConfig.getMpAppid());
+        wxPayConfig.setAppSecret(wechatAccountConfig.getMpAppSecret());
+        wxPayConfig.setMchId(wechatAccountConfig.getMchId());
+        wxPayConfig.setMchKey(wechatAccountConfig.getMchKey());
+        wxPayConfig.setKeyPath(wechatAccountConfig.getKeyPath());
+        wxPayConfig.setNotifyUrl(wechatAccountConfig.getNotifyUrl());
+        return wxPayConfig;
+
     }
 
 

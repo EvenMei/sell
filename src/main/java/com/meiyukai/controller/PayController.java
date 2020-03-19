@@ -35,6 +35,8 @@ public class PayController {
 
         ModelAndView mav = new ModelAndView();
         mav.setViewName("pay/create");
+
+
         // 1.查询订单
         OrderDTO orderDTO = orderService.findOne(orderId);
         if (orderDTO == null){
@@ -44,12 +46,11 @@ public class PayController {
 
         //2.发起支付
         PayResponse payResponse = payService.create(orderDTO);
-        log.info("【payResponse】 payResponse = {}" , payResponse);
+
         map.put("appId" , payResponse.getAppId());
         map.put("timeStamp" , payResponse.getTimeStamp());
         map.put("nonceStr" , payResponse.getNonceStr());
-        map.put("package" , payResponse.getPackAge().substring(payResponse.getPackAge().lastIndexOf("=")+1));
-        log.info(" 【package】 package = {}" , payResponse.getPackAge().substring(payResponse.getPackAge().lastIndexOf("=")+1));
+        map.put("package" , payResponse.getPackAge());
         map.put("signType" , payResponse.getSignType());
         map.put("paySign" , payResponse.getPaySign());
         map.put("returnUrl" , returnUrl);
@@ -66,13 +67,6 @@ public class PayController {
         mav.setViewName("pay/success");
         return mav;
     }
-
-
-
-
-
-
-
 
 
 

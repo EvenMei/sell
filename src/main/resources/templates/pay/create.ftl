@@ -5,7 +5,7 @@
                 "appId":"${appId}",     //公众号名称，由商户传入
                 "timeStamp":"${timeStamp}",         //时间戳，自1970年以来的秒数
                 "nonceStr":"${nonceStr}", //随机串
-                "package":"prepay_id=${package}",
+                "package":"${package}",
                 "signType":"${signType}",         //微信签名方式：
                 "paySign":"${paySign}" //微信签名
             },
