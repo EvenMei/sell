@@ -19,8 +19,8 @@ spring:
 
 #  mvc:
 #    view:
-#      prefix: "/pay/"
-#      suffix: ".ftl"
+#      prefix: "/"
+#      suffix: ".html"
 
 
 

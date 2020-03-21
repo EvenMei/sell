@@ -119,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO orderDTO =  new OrderDTO();
         OrderMaster orderMaster = orderMasterRepository.findById(orderID).get();
         if(orderMaster == null){
+            log.error("【订单不存在】orderId = {}" , orderID);
             throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
         }
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderID);
@@ -164,6 +165,7 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(orderDTO , orderMaster);
         OrderMaster orderMasterCanceled = orderMasterRepository.save(orderMaster);  // 更新订单状态
         System.out.println("--- 【orderMasterCanceled  :  】--- " + orderMasterCanceled);  //
+
         if(orderMasterCanceled == null){
             log.error("【取消订单】 更新失败   orderMaster={}  " , orderMaster);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
@@ -174,6 +176,7 @@ public class OrderServiceImpl implements OrderService {
             log.info("【取消订单】 返回库存失败 orderDetailList = {}" , orderDTO.getOrderDetailList());
             throw new SellException(ResultEnum.ORDER_DETAIL_EMPTY);
         }
+
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e -> new CartDTO(e.getProductId(), e.getProductQuantity())).collect(Collectors.toList());
         productInfoService.increaseStock(cartDTOList);
 

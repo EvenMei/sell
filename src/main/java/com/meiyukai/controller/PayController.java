@@ -2,6 +2,7 @@ package com.meiyukai.controller;
 
 import com.lly835.bestpay.model.PayResponse;
 import com.meiyukai.dto.OrderDTO;
+import com.meiyukai.enums.OrderStatusEnum;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import com.meiyukai.service.OrderService;
@@ -33,8 +34,10 @@ public class PayController {
                                                         @RequestParam(value = "returnUrl") String returnUrl ,
                                                             Map<String , Object> map){
 
+
+
+
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("pay/create");
 
 
         // 1.查询订单
@@ -43,6 +46,23 @@ public class PayController {
             log.error("【查询订单】订单不存在 orderId ={} " , orderId);
             throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
         }
+
+
+        try{
+            if (orderDTO.getOrderStatus()!= OrderStatusEnum.NEW.getCode()){
+                log.error("【微信支付】订单状态错误 orderStaus={}" , orderDTO.getOrderStatus());
+                throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+            }
+        }catch(Exception e){
+            map.put("msg" , e.getMessage());
+            map.put("url" , returnUrl.substring(0,returnUrl.lastIndexOf("#")));
+            log.info("【returnUrl】 returnUrl = {}" , returnUrl.substring(0,returnUrl.lastIndexOf("#")));
+            mav.setViewName("common/error");
+            return mav;
+        }
+
+
+
 
         //2.发起支付
         PayResponse payResponse = payService.create(orderDTO);
@@ -55,6 +75,7 @@ public class PayController {
         map.put("paySign" , payResponse.getPaySign());
         map.put("returnUrl" , returnUrl);
         mav.addAllObjects(map);
+        mav.setViewName("pay/create");
         return mav;
     }
 

@@ -39,6 +39,7 @@ public class PayServiceImpl implements PayService {
     @Override
     public PayResponse create(OrderDTO orderDTO) {
 
+
         //  获取用户订单的名称
         List<String> orderName = orderService.getOrderName(orderDTO);
         if (CollectionUtils.isEmpty(orderName)){
@@ -71,7 +72,6 @@ public class PayServiceImpl implements PayService {
         //4.支付的人(下单的人 ==？支付的人)
 
 
-
         PayResponse payResponse = bestPayService.asyncNotify(notifyData);
         log.info("【微信支付 】异步通知  payResponse = {}" , JsonUtil.toJson(payResponse));
 
@@ -96,6 +96,12 @@ public class PayServiceImpl implements PayService {
         return payResponse;
     }
 
+
+    /**
+     * 微信退款
+     * @param orderDTO
+     * @return
+     */
     @Override
     public RefundResponse refund(OrderDTO orderDTO) {
         RefundRequest refundRequest = new RefundRequest();

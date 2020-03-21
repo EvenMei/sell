@@ -1,5 +1,6 @@
 package com.meiyukai.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -45,5 +46,10 @@ public class OrderDetail implements Serializable {
 
     @Column(name = "update_time")
     private Date updateTime;
+
+    @JsonIgnore
+    public Double getTotalAmount(){
+        return (productPrice).doubleValue()*productQuantity;
+    }
 
 }

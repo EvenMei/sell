@@ -60,7 +60,7 @@ public class WeChatController {
         //调用方法
         String url = "http://xiaomei.natapp1.cc/sell/wechat/userInfo"; //TODO 待修改redirect 的地址
         String state = URLEncoder.encode(returnUrl);
-        System.out.println("------ returnUrl :    ------" +state);
+//        System.out.println("------ returnUrl :    ------" +state);
         String scope = WxConsts.OAUTH2_SCOPE_USER_INFO;
          String redirectUrl  = wxMpService.oauth2buildAuthorizationUrl(url, scope, state);
         log.info("【微信网页授权】获取code ， result={}" , redirectUrl);
@@ -77,7 +77,7 @@ public class WeChatController {
      */
     @GetMapping(value = "/userInfo")
     public String userInfo(@RequestParam(value = "code" )String code , @RequestParam(value = "state") String returnUrl){
-        System.out.println("--- 进入userInfo ---- ");
+//        System.out.println("--- 进入userInfo ---- ");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try{
              wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);

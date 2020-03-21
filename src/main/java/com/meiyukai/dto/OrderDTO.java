@@ -1,21 +1,16 @@
 package com.meiyukai.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.meiyukai.domain.OrderDetail;
 import com.meiyukai.enums.OrderStatusEnum;
 import com.meiyukai.enums.PayStatusEnum;
+import com.meiyukai.utils.EnumUtils;
 import com.meiyukai.utils.serializer.Date2LongSerializer;
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +35,7 @@ public class OrderDTO implements Serializable {
 
         private BigDecimal orderAmount;
 
+
         private Integer orderStatus  = OrderStatusEnum.NEW.getCode();
 
         private Integer payStatus =  PayStatusEnum.WAIT.getCode();
@@ -52,6 +48,20 @@ public class OrderDTO implements Serializable {
 
 
         private List<OrderDetail> orderDetailList ;/*= new ArrayList<>();*/  // 非必需的值 因此不需要初始化
+
+
+        @JsonIgnore
+        public String getOrderStatusEnum(){
+                return EnumUtils.getByCode(orderStatus , OrderStatusEnum.class).getMsg();
+        }
+
+
+        @JsonIgnore
+        public String getPayStatusEnum(){
+                return EnumUtils.getByCode(payStatus , PayStatusEnum.class).getMsg();
+        }
+
+
 
 
 
