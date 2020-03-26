@@ -19,7 +19,7 @@ public interface ProductInfoService {
     /**
      * 分页显示
      */
-    public Page<ProductInfo> findAllByPage(Pageable pageable);
+    public Page<ProductInfo> findAll(Pageable pageable);
 
 
 

@@ -70,13 +70,13 @@
                                                     <td>${orderDTO.getPayStatusEnum()}</td>
                                                     <td>${orderDTO.createTime}</td>
                                                     <th>
-                                                        <a href="/sell/seller/order/detail?orderId=${orderDTO.orderId}"  >详情</a>
+                                                        <a href="/sell/seller/order/detail?orderId=${orderDTO.orderId}"  style="color: #01cd8c ; font-size: medium">详情</a>
                                                     </th>
 
 
                                                     <th>
                                                         <#if  orderDTO.orderStatus == 0>
-                                                            <a href="/sell/seller/order/cancel?orderId=${orderDTO.orderId}">取消</a>
+                                                            <a href="/sell/seller/order/cancel?orderId=${orderDTO.orderId}" style="color: red ; font-size: medium">取消</a>
                                                         </#if>
                                                     </th>
 

@@ -8,7 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -36,7 +38,7 @@ public class ProductInfoServiceImplTest {
     public void findAllByPage() {
         PageRequest pageable = PageRequest.of(0,1);
 //        Pageable request = PageRequest.of(0,1);   // 上面的方法过期了， 可以使用这个方法代替
-        Page<ProductInfo> list = productInfoService.findAllByPage(pageable);
+        Page<ProductInfo> list = productInfoService.findAll(pageable);
         System.out.println("list  :  " + list.getContent());
 
     }

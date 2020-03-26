@@ -1,12 +1,10 @@
 package com.meiyukai.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -47,6 +45,9 @@ public class ProductInfo implements Serializable {
 
     @Column(name = "update_time")
     private Date updateTime;
+
+
+
 
 
 }

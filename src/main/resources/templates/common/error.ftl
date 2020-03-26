@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>错误提示</title>
+    <title>操作错误提示</title>
     <#--    <link href="../css/bootstrap.min.css" rel="stylesheet">-->
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
 <script>

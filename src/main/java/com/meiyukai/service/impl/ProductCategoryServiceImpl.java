@@ -41,7 +41,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         productCategoryRepository.deleteById(categoryId);
     }
 
-
+    @Override
+    public ProductCategory findProductCategoryByProductCategoryType(Integer productCategoryType) {
+        return productCategoryRepository.findByCategoryType(productCategoryType);
+    }
 
 
 }

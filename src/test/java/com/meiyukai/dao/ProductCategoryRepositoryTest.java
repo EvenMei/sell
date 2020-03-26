@@ -108,6 +108,15 @@ public class ProductCategoryRepositoryTest {
     }
 
 
+    @Test
+    public void findByCategoryTypeTest(){
+        ProductCategory productCategory = productCategoryRepository.findByCategoryType(1);
+        System.out.println("categoryName : " + productCategory.getCategoryName());
+    }
+
+
+
+
 
 
 

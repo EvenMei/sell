@@ -7,7 +7,7 @@
 
 
             <li>
-                <a href="#">
+                <a href="/sell/seller/order/list">
                     <i class="fa fa-cubes" aria-hidden="true"></i>
                     <span class="msm-text">订单</span>
                 </a>
@@ -21,7 +21,7 @@
                 </a>
 
                 <ul class="mm-has-child">
-                    <li><a href="#">列表</a></li>
+                    <li><a href="/sell/seller/product/list">列表</a></li>
                     <li><a href="#">新增</a></li>
                 </ul>
 

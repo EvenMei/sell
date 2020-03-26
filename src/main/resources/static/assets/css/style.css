@@ -182,8 +182,8 @@ select {
     font-size: 16px;
     letter-spacing: 0px;
     height: 50px;
-    color: #707070;
-    border: 1px solid #707070;
+    color: #000000;
+    border: 2px solid ;
     border-radius: 5px;
     padding: 0px 12px;
     font-weight: 500;
@@ -2924,8 +2924,8 @@ form.crypto-form {
     width: 100%;
     font-size: 16px;
     letter-spacing: 0px;
-    font-weight: 300;
-    border: 1px solid #E6E6E6;
+    font-weight: 500;
+    border: 2px solid #000000;
 }
 
 /* 2.3 Crypto Page Content CSS END */

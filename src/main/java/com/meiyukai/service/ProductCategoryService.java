@@ -39,6 +39,12 @@ public interface ProductCategoryService {
 
     public void deleteProductCategoryById(Integer categoryId);
 
+    /**
+     * 根据 productCategoryType 查找productCategory
+     */
+
+    ProductCategory  findProductCategoryByProductCategoryType(Integer productCategoryType);
+
 
 
 
