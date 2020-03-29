@@ -22,7 +22,7 @@
 
                 <ul class="mm-has-child">
                     <li><a href="/sell/seller/product/list">列表</a></li>
-                    <li><a href="#">新增</a></li>
+                    <li><a href="/sell/seller/product/toCreate">新增</a></li>
                 </ul>
 
             </li>

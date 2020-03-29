@@ -17,6 +17,13 @@ public interface ProductInfoService {
 
 
     /**
+     * 查询所有的产品
+     */
+    public List<ProductInfo> findAll();
+
+
+
+    /**
      * 分页显示
      */
     public Page<ProductInfo> findAll(Pageable pageable);
@@ -51,6 +58,12 @@ public interface ProductInfoService {
      */
 
     public void decreaseStock(List<CartDTO> cartDTOList);
+
+    /**
+     * 根据 productId 删除商品信息
+     */
+
+    public void deleteProductById(String productId);
 
 
 

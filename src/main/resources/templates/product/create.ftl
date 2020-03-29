@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <title>商品更新</title>
+    <title>上架新商品</title>
 
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <#--    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
@@ -22,6 +22,10 @@
 
     <script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <#--    <script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+
+    <#--图片上传-->
+    <#--图片上传-->
+
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
@@ -56,8 +60,6 @@
     <![endif]-->
 
 
-    <#--<script src="/sell/assets/js/jquery-1.10.2.js"></script>-->
-
 </head>
 <script>
     function mesubmit() {
@@ -69,16 +71,11 @@
         }else{
             var form =document.getElementById("my_form");
             form.submit();
+
         }
     }
 
 
-
-
-
-    function deleteProduct() {
-        location.href="/sell/seller/product/deleteProduct?productId=${productInfo.productId}&iconPath=${productInfo.productIcon}";
-    }
 
 
 </script>
@@ -103,169 +100,103 @@
 
             <div class="container">
                 <div class="row clearfix">
-                    <div class="col-md-12 column">
+<#--                    <div class="col-md-12 column">-->
 
-                        <h2 class="crypto-stitle">修改商品信息</h2>
+                        <h2 class="crypto-stitle">创建商品信息</h2>
 
-                        <div class="row">
+<#--                        <div class="row">-->
 
 
                             <#--名称、价格、描述-->
-                            <div class="col-xl-6">
+<#--                            <div class="col-md-12">-->
+
                                 <div class="crypto-form-wrapper">
 
-                                    <form class="crypto-form"  id="my_form" method="post"  action="/sell/seller/product/submit" > <#--  method="post"    action="/sell/seller/product/submit" -->
+                                    <form class="crypto-form"  id="my_form" method="post"  action="/sell/seller/product/create"  enctype="multipart/form-data"> <#--  method="post"    action="/sell/seller/product/submit" -->
 
                                         <div class="cfi">
                                             <label  >名称</label>
-                                            <input type="text" placeholder="输入商品的名称" name="productName" value="${productInfo.productName}" style="font-size: large ;" >
+                                            <input type="text" placeholder="输入商品的名称" name="productName"  style="font-size: large ;" >
                                         </div>
+
 
                                         <div class="row">
 
-                                            <div class="col-xl-4">
+                                            <div class="col-md-3">
                                                 <div class="cfi">
                                                     <label >价格</label>
-                                                    <input type="text" name="productPrice"  placeholder="输入商品的价格" value="${productInfo.productPrice}">
+                                                    <input type="text" name="productPrice"  placeholder="输入商品的价格" >
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-4">
+                                            <div class="col-md-3">
                                                 <div class="cfi">
                                                     <label>库存</label>
-                                                    <input type="number"  id="stock" name="productStock"  placeholder="输入库存量" value="${productInfo.productStock?replace("," , "")}">
+                                                    <input type="number"  id="stock" name="productStock"  placeholder="输入库存量" >
                                                 </div>
                                             </div>
 
-                                            <div class="col-xl-4">
+
+
+
+                                            <div class="col-md-3">
                                                 <div class="cfi">
-                                                    <label for="confirmNewPassword">类目</label>
-                                                    <select  id="type_selector" name="productCategory">
-                                                        <option >---请选择---</option>
+                                                    <label for="confirmNewPassword">选择商品类目</label>
+                                                    <select  id="type_selector" name="productCategory" style="width: 100% ;" >
+                                                        <option  > --------请选择-------- </option>
+
                                                         <#list productCategoryList as productCatetory>
-                                                            <#if productInfo.categoryType == productCatetory.categoryType>
-                                                                <option value="${productCatetory.categoryType}" selected="selected">${productCatetory.categoryName}</option>
-                                                            </#if>
 
-                                                            <#if productInfo.categoryType != productCatetory.categoryType>
-                                                                <option value="${productCatetory.categoryType}">${productCatetory.categoryName}</option>
-                                                            </#if>
-
+                                                            <option value="${productCatetory.categoryType}">${productCatetory.categoryName}</option>
                                                         </#list>
-
 
                                                     </select>
                                                 </div>
                                             </div>
 
+
+
+                                            <div class="col-md-3">
+                                                <div class="cfi">
+                                                    <label >上传图片</label>
+                                                <input type="file" name="uploadFile"   class="cfi-button;" >  <#--cfi-button-->
+                                                </div>
+                                            </div>
+
+
+
                                         </div>
-
-
-
-                                        <div class="cfi">
-                                            <label >描述</label>
-                                            <textarea  name="productDescription" rows="4" style="height: auto; width: 100%" >${productInfo.productDescription}</textarea>
-                                        </div>
-
-                                        <input type="hidden" name="productId" value="${productInfo.productId}">
 
                                         <div class="row">
 
-                                            <div class="cfi col-xl-12 ">
-                                                <button onclick="mesubmit()" class="btn btn-block btn-success btn-lg" style="width: 100%">提交</button>
+                                            <div class="col-xl-12">
+                                                <div class="cfi">
+                                                    <label >描述</label>
+                                                    <textarea  name="productDescription" rows="4" style="height: auto; width: 100%" ></textarea>
+                                                </div>
                                             </div>
 
                                         </div>
+
+
+
+                                        <button onclick="mesubmit()" class="cfi-button" style="width: 100%">确定并提交</button>
+                                        <#--                                        <button type="submit"  class="cfi-button">提交</button>-->
+
                                     </form>
-
-
-
-                                        <div class="cfi">
-                                        <button  onclick="deleteProduct()" class="btn btn-block btn-danger btn-lg" style="width: 100%">删除商品</button>
-                                        </div>
-
-
                                 </div>
-                            </div>
+
+<#--                            </div>-->
                             <#--名称、价格、描述-->
 
 
 
 
 
-
-                            <#--图片部分-->
-                            <div class="col-xl-6">
+<#--                        </div>-->
 
 
-
-                                <div class="crypto-overview-wrapper">
-
-                                    <div class="crypto-overview">
-                                        <div class="crypto-current-balance">
-
-
-                                            <div class="row">
-                                                <div class="col-xl-4" >
-
-                                                    <h4>当前商品图片：</h4>
-                                                    <img src="${productInfo.productIcon !"" }"  alt="图片挂掉了！" style="width: 100%; height: auto; margin-top: 60px">
-
-
-                                                </div>
-
-                                                <div class="col-xl-8"  >
-
-                                                    <form enctype="multipart/form-data" action="/sell/seller/product/upload" method="post">
-
-                                                        <div class="form-group"  >
-
-                                                            <input id="file-4" type="file"   name="uploadFile">   <#--multiple=true-->
-                                                        </div>
-
-
-                                                        <input  name="productId" type="hidden"value="${productInfo.productId}">
-                                                        <input  name="iconPath" type="hidden"value="${productInfo.productIcon}">
-
-                                                    </form>
-
-                                                </div>
-
-
-                                            </div>
-
-
-
-                                            <div class="row">
-
-                                                <div class="col-xl-12" >
-
-
-
-
-
-                                                </div>
-
-
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-
-                            </div>
-                            <#--图片部分-->
-
-
-                        </div>
-
-
-                    </div>
+<#--                    </div>-->
 
                 </div>
             </div>
@@ -275,11 +206,6 @@
     </div>
 </div>
 </div>
-
-
-
-
-
 
 
 
@@ -361,6 +287,14 @@
 
 
 </script>
+
+
+
+
+<#--图片上传-->
+
+<#--图片上传-->
+
 
 <#include "../common/script.ftl">
 

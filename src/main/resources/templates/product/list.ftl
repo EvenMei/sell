@@ -6,6 +6,19 @@
     <title>订单列表</title>
 
     <#include  "../common/link.ftl">
+    <script src="/sell/assets/js/jquery-1.10.2.js"></script>
+    <script>
+        //此处用来设置 textarea 自适应文字的高度
+        $(function () {
+            $('textarea').each(function () {
+                this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;'+'border:none;'+'readonly:readonly;'+'resize:none;');
+            }).on('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+        });
+    </script>
 
 </head>
 
@@ -58,7 +71,7 @@
                                             </thead>
 
 
-                                            <#list  productInfoPage.content as productInfo>
+                                            <#list  productInfoDTOPage.content as productInfo>
 
 
                                             <tr>
@@ -67,14 +80,17 @@
                                                 <td style="text-align: center">${productInfo.productName}</td>
                                                 <td style="text-align: center">
                                                     <div>
-                                                        <img src="  ${productInfo.productIcon}" style="width: 80px ; height: 80px" >
+                                                        <img src="  ${productInfo.productIcon !""}" alt="未找到图片" style="width: 80px ; height: 80px" >
                                                     </div>
                                                 </td>
 
                                                 <td style="text-align: center">${productInfo.productPrice}</td>
                                                 <td style="text-align: center">${productInfo.productStock}</td>
-                                                <td style="text-align: center">${productInfo.productDescription}</td>
-                                                <td style="text-align: center">${productInfo.categoryType}</td>
+                                                <td style="text-align: center">
+<#--                                                    <textarea   id="my_textarea" name="productDescription" rows="5"  readonly="readonly"  style="height: auto; width: auto; border: none; resize: none;overflow-y: visible" >${productInfo.productDescription}</textarea>-->
+                                                    <textarea   id="my_textarea" name="productDescription"  style=" border: none; " >${productInfo.productDescription}</textarea>
+                                                </td>
+                                                <td style="text-align: center">${productInfo.categoryName}</td>
                                                 <td style="text-align: center">${productInfo.createTime}</td>
                                                 <td style="text-align: center">${productInfo.updateTime}</td>
 
@@ -128,7 +144,7 @@
 
 
 
-                                    <#list 1..productInfoPage.totalPages as index>
+                                    <#list 1..productInfoDTOPage.totalPages as index>
 
                                         <#if currentPage == index >
                                             <li  class="disabled"><a href="#" >${index}</a></li>
@@ -142,12 +158,12 @@
 
 
 
-                                    <#if  productInfoPage.totalPages  gt currentPage>
+                                    <#if  productInfoDTOPage.totalPages  gt currentPage>
                                         <li><a href="/sell/seller/product/list?page=${currentPage+1}&size=${size}">下一页</a></li>
                                     </#if>
 
 
-                                    <#if  productInfoPage.totalPages == currentPage>
+                                    <#if  productInfoDTOPage.totalPages == currentPage>
                                         <li class="disabled"><a href="#" >下一页</a></li>
                                     </#if>
 

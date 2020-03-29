@@ -30,6 +30,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    public List<ProductInfo> findAll() {
+        return productInfoRepository.findAll();
+    }
+
+
+    @Override
     public Page<ProductInfo> findAll(Pageable pageable) {
 
         return productInfoRepository.findAll(pageable);
@@ -91,6 +97,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             productInfoRepository.save(productInfo);
 
         }
+    }
+
+    @Override
+    public void deleteProductById(String productId) {
+        productInfoRepository.deleteById(productId);
     }
 
 

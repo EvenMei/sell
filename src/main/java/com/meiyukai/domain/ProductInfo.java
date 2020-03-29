@@ -1,6 +1,6 @@
 package com.meiyukai.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
