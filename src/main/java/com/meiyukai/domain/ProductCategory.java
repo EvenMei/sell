@@ -26,6 +26,12 @@ public class ProductCategory implements Serializable {
     @Column(name = "category_type")
     private Integer categoryType ;  // 类目类型
 
+    @Column(name = "create_time")
+    private Date createTime;
+
+    @Column(name = "update_time")
+    private Date updateTime;
+
 
 
 

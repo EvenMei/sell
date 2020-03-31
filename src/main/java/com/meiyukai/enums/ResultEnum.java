@@ -24,6 +24,7 @@ public enum  ResultEnum {
     WECHAT_NOTIFY_MONEY_VARIFY_ERROR(21,"微信异步通知校验金额不通过"),
     ORDER_NAME_EMPTY(22 , "订单名称为空"),
     DELETE_ICON_ERROR(23,"图片删除失败！") ,
+    CATEGORY_TYPE_ERROR(24  , "类目状态错误，需要正整数"),
     ;
 
     private Integer code;

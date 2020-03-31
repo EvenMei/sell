@@ -59,6 +59,18 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script src="/sell/assets/js/jquery-1.10.2.js"></script>
+
+    <script>
+        //此处用来设置 textarea 自适应文字的高度
+        $(function () {
+            alert("ava , 创建商品信息的时候务必把信息填写完整，否则不能创建商品信息！图片可以暂时不上传！修改页面也可以添加！");
+
+        });
+    </script>
+
+
+
 
 </head>
 <script>
@@ -68,10 +80,9 @@
         if(stock.length>6){
             alert("库存数量是不是有点大？不要超过六位数！");
             event.preventDefault();
-        }else{
+        } else{
             var form =document.getElementById("my_form");
             form.submit();
-
         }
     }
 

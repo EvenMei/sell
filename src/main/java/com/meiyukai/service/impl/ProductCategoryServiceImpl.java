@@ -3,6 +3,8 @@ package com.meiyukai.service.impl;
 import com.meiyukai.dao.ProductCategoryRepository;
 import com.meiyukai.domain.ProductCategory;
 import com.meiyukai.service.ProductCategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,6 +46,17 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public ProductCategory findProductCategoryByProductCategoryType(Integer productCategoryType) {
         return productCategoryRepository.findByCategoryType(productCategoryType);
+    }
+
+    @Override
+    public Page<ProductCategory> findAll(Pageable pageable) {
+        return productCategoryRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Integer> getCategoryIdList() {
+//        return productCategoryRepository.;
+        return productCategoryRepository.findCategoryIdList();
     }
 
 

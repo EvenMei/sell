@@ -34,8 +34,8 @@
                 </a>
 
                 <ul class="mm-has-child">
-                    <li><a href="#">列表</a></li>
-                    <li><a href="#">新增</a></li>
+                    <li><a href="/sell/seller/category/list">列表</a></li>
+                    <li><a href="/sell/seller/category/toCreate">新增</a></li>
                 </ul>
 
             </li>

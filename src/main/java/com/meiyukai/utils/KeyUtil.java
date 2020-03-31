@@ -3,6 +3,7 @@ package com.meiyukai.utils;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -15,7 +16,18 @@ public class KeyUtil {
         Random random =  new Random();
         Integer a  =  random.nextInt(900000)+100000; // 生成六位随机数
         return System.currentTimeMillis() + String.valueOf(a);
-
     }
+
+
+
+    public static synchronized Integer getUniqueKey(List<Integer> ids ){
+        Integer base = (Integer)new Random().nextInt(1000)+10000;
+        while(ids.contains(base)){
+            base = (Integer)new Random().nextInt(1000)+10000;
+        }
+        return base;
+    }
+
+
 
 }

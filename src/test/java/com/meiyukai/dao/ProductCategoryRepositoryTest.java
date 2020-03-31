@@ -82,7 +82,7 @@ public class ProductCategoryRepositoryTest {
 
     @Test
     public void testUpdateCategory(){
-        ProductCategory pc =  productCategoryRepository.findById(2).get(); // 先查寻 ，再修改
+        ProductCategory pc =  productCategoryRepository.findById(1).get(); // 先查寻 ，再修改
 //        pc.setCategoryType(18);
         pc.setCategoryName("男生最爱");
         productCategoryRepository.save(pc);
@@ -112,6 +112,15 @@ public class ProductCategoryRepositoryTest {
     public void findByCategoryTypeTest(){
         ProductCategory productCategory = productCategoryRepository.findByCategoryType(1);
         System.out.println("categoryName : " + productCategory.getCategoryName());
+    }
+
+
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    public void findCategoryIdList(){
+        List<Integer> list = productCategoryRepository.findCategoryIdList();
+      System.out.println("list: " + list);
     }
 
 
