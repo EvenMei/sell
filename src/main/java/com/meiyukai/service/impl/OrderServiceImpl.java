@@ -13,14 +13,12 @@ import com.meiyukai.enums.OrderStatusEnum;
 import com.meiyukai.enums.PayStatusEnum;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
-import com.meiyukai.service.OrderService;
-import com.meiyukai.service.PayService;
-import com.meiyukai.service.ProductCategoryService;
-import com.meiyukai.service.ProductInfoService;
+import com.meiyukai.service.*;
 import com.meiyukai.utils.JsonUtil;
 import com.meiyukai.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,6 +53,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource(name = "payService")
     private PayService payService;
+
+    @Resource(name = "pushMessage")
+    private PushMessageService pushMessageService;
+
+    @Autowired
+    private WebSocket webSocket;
 
 
             
@@ -91,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
 
             /*CartDTO cartDTO =  new CartDTO(orderDetail.getProductId() ,  orderDetail.getProductQuantity());
             cartDTOList.add(cartDTO);*/
+
         }
 
 
@@ -109,6 +114,11 @@ public class OrderServiceImpl implements OrderService {
         List<CartDTO> cartDTOList  = orderDTO.getOrderDetailList().stream().map(e-> new CartDTO(e.getProductId() , e.getProductQuantity()))
                 .collect(Collectors.toList());
         productInfoService.decreaseStock(cartDTOList);
+
+        //调用 webSocket 发送消息
+
+       // webSocket.onMessage("您有一个新的订单");
+        webSocket.sendMessage(orderDTO.getOrderId());
 
         return orderDTO;
     }
@@ -190,6 +200,11 @@ public class OrderServiceImpl implements OrderService {
             payService.refund(orderDTO);
         }
 
+        //微信模板消息推送
+        pushMessageService.buyerCancel(orderDTO);  // 买家自行退单
+
+        pushMessageService.sellerCancel(orderDTO);  // 通知商家有客户退单
+
         return orderDTO;
     }
 
@@ -213,6 +228,9 @@ public class OrderServiceImpl implements OrderService {
             log.error("【完结订单】更新失败  orderMaster={}" , orderMaster);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
+
+        //推送微信模板消息
+        pushMessageService.orderStatus(orderDTO);
         return orderDTO;
     }
 
@@ -241,6 +259,13 @@ public class OrderServiceImpl implements OrderService {
             log.error("【支付】 订单支付失败  orderDTO={} " , orderDTO);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
+        //推送微信模板消息
+        pushMessageService.paid(orderDTO); // 通知客户成功下单
+
+        pushMessageService.newOrder(orderDTO); // 通知商家有新的订单
+
+
+
         return orderDTO;
     }
 

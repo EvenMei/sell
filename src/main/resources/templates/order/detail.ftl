@@ -9,7 +9,7 @@
 
     <script>
         function finish() {
-            location.href="/sell/seller/order/cancel?orderId=${orderDTO.orderId}";
+            location.href="/sell/seller/order/finish?orderId=${orderDTO.orderId}";
         }
 
         function cancel() {

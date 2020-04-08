@@ -1,3 +1,9 @@
+
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
 <script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
 <script src="https://www.jq22.com/jquery/jquery-ui-1.11.0.js"></script>
 
@@ -17,3 +23,10 @@
 
 <script src="/sell/assets/js/graph-chart-activation.js"></script>
 <script src="/sell/assets/js/theme.js"></script>
+
+
+
+
+
+
+

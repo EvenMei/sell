@@ -8,6 +8,8 @@ import com.meiyukai.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,10 @@ public class SellOrderController {
      * @param size （每页显示多少条记录）
      * @return
      */
+//    @RolesAllowed(value = "USER")
+//    @Secured(value = "USER")
+//    @PreAuthorize(value = "hasRole('USER')")
+
     @GetMapping(value = "/list")
     public ModelAndView list(@RequestParam(value = "page" , defaultValue = "1") Integer page ,
                                                     @RequestParam(value = "size" ,defaultValue = "10") Integer size,

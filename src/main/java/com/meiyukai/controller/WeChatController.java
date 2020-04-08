@@ -1,5 +1,6 @@
 package com.meiyukai.controller;
 
+import com.meiyukai.config.ProjectUrl;
 import com.meiyukai.config.WechatMpConfig;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
@@ -23,6 +24,9 @@ public class WeChatController {
 
     @Autowired
     private WxMpService wxMpService;
+
+    @Autowired
+    private ProjectUrl projectUrl;
 
     /*@GetMapping(value = "/auth")
     public void auth(@RequestParam String code ){
@@ -58,15 +62,17 @@ public class WeChatController {
     public String  auth(@RequestParam(value = "returnUrl") String returnUrl){
         //配置
         //调用方法
-        String url = "http://xiaomei.natapp1.cc/sell/wechat/userInfo"; //TODO 待修改redirect 的地址
+//        String url = "http://xiaomei.natapp1.cc/sell/wechat/userInfo"; // url : 拿到code后访问的地址
+        String url = projectUrl.getWechatMpAuthorize(); // url : 拿到code后访问的地址
         String state = URLEncoder.encode(returnUrl);
 //        System.out.println("------ returnUrl :    ------" +state);
         String scope = WxConsts.OAUTH2_SCOPE_USER_INFO;
          String redirectUrl  = wxMpService.oauth2buildAuthorizationUrl(url, scope, state);
         log.info("【微信网页授权】获取code ， result={}" , redirectUrl);
         return "redirect:"+redirectUrl;
-
     }
+
+
 
 
     /**

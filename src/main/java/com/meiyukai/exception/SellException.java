@@ -1,10 +1,12 @@
 package com.meiyukai.exception;
 
 import com.meiyukai.enums.ResultEnum;
+import lombok.Data;
 
 /**
  *异常
  */
+@Data
 public class SellException  extends RuntimeException{
 
     private Integer code;

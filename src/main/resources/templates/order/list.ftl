@@ -7,6 +7,8 @@
 
     <#include  "../common/link.ftl">
 
+
+
 </head>
 
 
@@ -23,19 +25,13 @@
             <#--侧边栏-->
 
 
-
-
-
-
             <#--内容区域-->
-
             <div id="page-content-wrapper" class="dashboard-content">
 
                 <div class="page-content inset">
                     <div class="crypto-container">
 
                         <div class="row">
-
 
                             <#--表格-->
                             <div class="col-xl-12">
@@ -92,6 +88,42 @@
                             <#--表格-->
 
 
+
+                            <#--弹框-->
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column">
+
+                                        <button id="btn_model" href="#myModal" class="btn" data-toggle="modal" hidden="hidden"></button>
+                                        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title" id="myModalLabel">
+                                                            提醒
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        您有一个新的订单
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:document.getElementById('notice').pause()">关闭</button>
+                                                        <button type="button" class="btn btn-primary" onclick="location.reload()">查看</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <#--弹框-->
+
+
+
+
                             <#--分页-->
                             <div class="col-md-12 column">
                                 <ul class="pagination pull-right" >
@@ -139,18 +171,70 @@
 
                         </div>
 
+
                     </div>
                 </div>
             </div>
-
             <#--内容区域-->
+
+
 
         </div>
     </div>
 </div>
 
 
+
 <#include "../common/script.ftl">
+
+<#--播放音乐-->
+    <audio id="notice" loop="loop">
+        <source src="/sell/mp3/music.mp3" type="audio/mpeg" />
+    </audio>
+<#--播放音乐-->
+
+
+<script>
+
+    /*前端websocket */
+
+    var websocket =  null;
+    if ('WebSocket' in window){
+        // websocket = new WebSocket('ws://localhost:8885/sell/webSocket');
+        websocket = new WebSocket('ws://xiaomei.natapp1.cc/sell/webSocket');
+
+    }else{
+        alert("该浏览器不支持webSocket ， 请使用谷歌浏览器 Chrome ");
+
+    }
+
+    websocket.onopen = function (event) {
+        console.log("建立连接");
+    }
+
+    websocket.onclose = function (event) {
+        console.log("连接关闭");
+    }
+
+    websocket.onmessage = function (event) {
+        console.log("收到消息  :  "+ event.data);
+        //弹窗提醒，播放提示音乐
+        document.getElementById("notice").play();
+        $("#btn_model").click();
+
+    }
+
+    websocket.onerror = function () {
+        alert("websocket 发生错误： ");
+    }
+
+    window.onbeforeunload  = function(event){
+        websocket.close();
+    }
+
+
+</script>
+
 
 
 

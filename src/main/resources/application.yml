@@ -16,15 +16,17 @@ spring:
     show-sql: true
   jackson:
     default-property-inclusion: non_null  # 全局 jsonInclude.Include.NOT_NULL
+  redis:
+    host: localhost
+    port: 6379
+
+
+
 
 #  mvc:
 #    view:
 #      prefix: "/"
 #      suffix: ".html"
-
-
-
-
 
 
 
@@ -43,6 +45,14 @@ wechat:
     mchKey: meiyukai520shenye131411111111111
     keyPath: /Users/meiyukai/Documents/wechat_cert/1579677461_20200315_cert/apiclient_cert.p12
     notifyUrl: http://xiaomei.natapp1.cc/sell/pay/notify
+    templateId:
+      orderStatus: x3iOphxcZYLWn37oy_gZpccqSSrXryXj7Zgz6haqKrA
+      newOrder: ZkWoJZftcl0pa6pj5X2JW78L6fDAr_0nJtcuKdNNdbU
+      paid: -8QG_kNkMaHQjPVWrwfnEONNk5JhhBQ2pssmeAaHvOg
+      avaOpenid: oRKFQs8sCCRMn-i-652xmvTQ6kr4
+      buyerCancel: xnA45llXUXgMrmHUw2M_smiviXroDqFIQSz4OPRGCpY
+      sellerCancel: t975WHy2HM7Yj9dtUpB7XHFd7dksZSAnWnAM5I-RTZo
+
 
 
 
@@ -56,4 +66,9 @@ wechat:
 mybatis:
   type-aliases-package:  com.meiyukai.domain
   type-handlers-package:  com.meiyukai.dao
+
+url:
+  wechatMpAuthorize: http://xiaomei.natapp1.cc/sell/wechat/userInfo
+  sell:
+
 
