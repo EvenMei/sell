@@ -90,7 +90,7 @@ public class OrderServiceImplTest {
         String orderId =  "1580907410938979155";
         OrderDTO orderDTO = orderService.findOne(orderId);
         OrderDTO finishedOrderDTO = orderService.finish(orderDTO);
-        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(),  finishedOrderDTO.getOrderStatus()) ;
+        Assert.assertEquals(OrderStatusEnum.DELIVERED.getCode(),  finishedOrderDTO.getOrderStatus()) ;
     }
 
     @Test
@@ -113,6 +113,12 @@ public class OrderServiceImplTest {
         Pageable pageable = PageRequest.of(0,2);
         Page<OrderDTO> orderDTOList = orderService.findAllOrderList(pageable);
         System.out.println("---- ---- orderDTOList ---- ---- "+ JsonUtil.toJson(orderDTOList.getContent()));
+    }
+
+    @Test
+    public void findAllByOpenidTest(){
+        List<OrderDTO> allByOpenid = orderService.findAllByOpenid("oRKFQs6eBbHAJlvc-IJwUGhMG22c");
+        System.out.println("allByOpenidDTO : " + JsonUtil.toJsonCommon(allByOpenid));
     }
 
 

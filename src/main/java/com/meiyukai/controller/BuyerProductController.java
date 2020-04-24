@@ -33,8 +33,8 @@ public class BuyerProductController {
     private ProductCategoryService productCategoryService;
 
 
-    @GetMapping(value = "/list")  // 相当于 ReqeustMapping  的get 请求
-    public ResultVO  list(){
+ //   @GetMapping(value = "/list")  // 相当于 ReqeustMapping  的get 请求
+    /*public ResultVO  list(){
 
 //        ResultVO resultVO =  new ResultVO();
 
@@ -42,15 +42,15 @@ public class BuyerProductController {
         List<ProductInfo> productInfoList =  productInfoService.findUpAll();
 
         //2. 查询类目(一次性)
-        /*List<Integer> categoryTypeList = new ArrayList<>();
+        *//*List<Integer> categoryTypeList = new ArrayList<>();
         for(ProductInfo productInfo : productInfoList){
             categoryTypeList.add(productInfo.getCategory_type());
-        }*/
+        }*//*
 
 
-        /**
+        *//**
          * java 8 lambda 表达式
-         */
+         *//*
 
         List<Integer> categoryTypeList = productInfoList.stream().map(e -> e.getCategoryType()).collect(Collectors.toList());
         List<ProductCategory> productCategoryList = productCategoryService.findByCategoryTypeIn(categoryTypeList );
@@ -84,7 +84,7 @@ public class BuyerProductController {
         return ResultVOUtil.success(productVOList);
 
     }
-
+*/
 
 
 

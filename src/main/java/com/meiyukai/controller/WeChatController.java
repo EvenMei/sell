@@ -1,20 +1,18 @@
 package com.meiyukai.controller;
 
 import com.meiyukai.config.ProjectUrl;
-import com.meiyukai.config.WechatMpConfig;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 
 @Controller
@@ -82,7 +80,9 @@ public class WeChatController {
      * @return
      */
     @GetMapping(value = "/userInfo")
-    public String userInfo(@RequestParam(value = "code" )String code , @RequestParam(value = "state") String returnUrl){
+    public String userInfo(@RequestParam(value = "code" )String code ,
+                                            @RequestParam(value = "state") String returnUrl,
+                                             HttpServletRequest request){
 //        System.out.println("--- 进入userInfo ---- ");
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
         try{
@@ -92,6 +92,7 @@ public class WeChatController {
             throw new SellException(ResultEnum.WECHAT_MP_ERROR.getCode() , e.getError().getErrorMsg());
         }
         String openid = wxMpOAuth2AccessToken.getOpenId();
+        request.getSession().setAttribute("openid" , openid);
         log.info("  【网页授权】openid = {}", openid);
         return "redirect:"+returnUrl+"?openid="+openid;
     }

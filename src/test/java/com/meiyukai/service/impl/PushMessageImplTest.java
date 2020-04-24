@@ -25,7 +25,7 @@ public class PushMessageImplTest {
     @Test
     public void orderStatus() {
         OrderDTO orderDTO = orderService.findOne("1586165722534898865");
-        pushMessageService.orderStatus(orderDTO);
+        pushMessageService.orderDeliver(orderDTO);
     }
 
     @Test

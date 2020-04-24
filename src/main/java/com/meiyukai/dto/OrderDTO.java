@@ -6,11 +6,13 @@ import com.meiyukai.domain.OrderDetail;
 import com.meiyukai.enums.OrderStatusEnum;
 import com.meiyukai.enums.PayStatusEnum;
 import com.meiyukai.utils.EnumUtils;
+import com.meiyukai.utils.TransactionStatusUtils;
 import com.meiyukai.utils.serializer.Date2LongSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -59,6 +61,26 @@ public class OrderDTO implements Serializable {
         @JsonIgnore
         public String getPayStatusEnum(){
                 return EnumUtils.getByCode(payStatus , PayStatusEnum.class).getMsg();
+        }
+
+        @JsonIgnore
+        public String getTransactionStatus(){
+                return TransactionStatusUtils.getTransactionStatusEnum(payStatus , orderStatus).getMsg();
+        }
+
+        @JsonIgnore
+        public Integer getTransactionCode(){
+                return TransactionStatusUtils.getTransactionStatusEnum(payStatus , orderStatus).getCode();
+        }
+
+        @JsonIgnore
+        public String getCreateTime(){
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime);
+        }
+
+        @JsonIgnore
+        public Integer getTotalDetailAmount(){
+                return orderDetailList.size();
         }
 
 

@@ -13,12 +13,17 @@ public class JsonUtil {
     }
 
 
-    public Object fromJson(String resource , Class clazz){
+    public static Object fromJson(String resource , Class clazz){
         GsonBuilder gsonBuilder =  new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
         Gson gson = gsonBuilder.create();
         return gson.fromJson(resource , clazz);
     }
+
+    public static String toJsonCommon(Object object){
+        return new Gson().toJson(object);
+    }
+
 
 
 

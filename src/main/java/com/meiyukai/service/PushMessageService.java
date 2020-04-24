@@ -8,7 +8,7 @@ import com.meiyukai.dto.OrderDTO;
 
 public interface PushMessageService {
 
-    void orderStatus(OrderDTO  orderDTO) ;
+    void orderDeliver(OrderDTO  orderDTO) ;
 
 
     void newOrder(OrderDTO orderDTO);

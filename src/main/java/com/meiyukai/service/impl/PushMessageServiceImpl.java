@@ -1,7 +1,9 @@
 package com.meiyukai.service.impl;
 
 import com.meiyukai.config.WechatAccountConfig;
+import com.meiyukai.domain.Express;
 import com.meiyukai.dto.OrderDTO;
+import com.meiyukai.service.ExpressService;
 import com.meiyukai.service.OrderService;
 import com.meiyukai.service.PushMessageService;
 import com.meiyukai.utils.JsonUtil;
@@ -37,18 +39,23 @@ public class PushMessageServiceImpl implements PushMessageService {
     @Resource(name = "orderService")
     private OrderService orderService;
 
+    @Resource(name = "expressService")
+    private ExpressService expressService;
+
+
+
     @Override
-    public void orderStatus(OrderDTO orderDTO) {
+    public void orderDeliver(OrderDTO orderDTO) {
+        Express express = expressService.findByOrderId(orderDTO.getOrderId());
         WxMpTemplateMessage wxMpTemplateMessage = new WxMpTemplateMessage();
-        wxMpTemplateMessage.setTemplateId(wechatAccountConfig.getTemplateId().get("orderStatus"));
+        wxMpTemplateMessage.setTemplateId(wechatAccountConfig.getTemplateId().get("orderDeliver"));
         wxMpTemplateMessage.setToUser(orderDTO.getBuyerOpenid());
 //        wxMpTemplateMessage.setToUser("oRKFQs8sCCRMn-i-652xmvTQ6kr4");
         List<WxMpTemplateData> data = Arrays.asList(
-                new WxMpTemplateData("first" , "您好，您有一个订单状态已更新"  ),
-                new WxMpTemplateData("keyword1" , orderDTO.getOrderId()),
-                new WxMpTemplateData("keyword2" , "商家已接单"),
-                new WxMpTemplateData("keyword3" , new Date().toString()),
-                new WxMpTemplateData("remark" ,"请等待商家配送")
+                new WxMpTemplateData("first" , "您好，您在胖阿姨家买的红膏大闸蟹已发货"  ),
+                new WxMpTemplateData("keyword1" , express.getExpressNumber()),
+                new WxMpTemplateData("keyword2" , express.getExpressName()),
+                new WxMpTemplateData("remark" ,"如有疑问请联系客服 18221616376")
         );
 
         wxMpTemplateMessage.setData(data);
@@ -58,6 +65,8 @@ public class PushMessageServiceImpl implements PushMessageService {
             log.error("【微信模版消息】 e = {}"  ,e.getMessage());
         }
     }
+
+
 
     /**
      *新的订单通知 商家（ava）

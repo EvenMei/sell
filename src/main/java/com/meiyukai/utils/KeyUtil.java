@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class KeyUtil {
 
-    public static  synchronized String genUniqueKey(){
+    public static  synchronized String getUniqueKey(){
         Random random =  new Random();
         Integer a  =  random.nextInt(900000)+100000; // 生成六位随机数
         return System.currentTimeMillis() + String.valueOf(a);

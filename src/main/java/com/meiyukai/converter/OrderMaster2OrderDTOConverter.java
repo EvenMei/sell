@@ -3,8 +3,10 @@ package com.meiyukai.converter;
 import com.meiyukai.dao.OrderDetailRepository;
 import com.meiyukai.domain.OrderDetail;
 import com.meiyukai.domain.OrderMaster;
+import com.meiyukai.domain.ProductInfo;
 import com.meiyukai.dto.OrderDTO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  */
 
 public class OrderMaster2OrderDTOConverter {
+
 
 
     public static OrderDTO convert(OrderMaster orderMaster ){
@@ -32,5 +35,11 @@ public class OrderMaster2OrderDTOConverter {
 
      return   orderMasterList.stream().map(e-> convert(e)).collect(Collectors.toList());
     }
+
+
+
+
+
+
 
 }

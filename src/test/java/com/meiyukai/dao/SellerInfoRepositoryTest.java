@@ -5,12 +5,9 @@ import com.meiyukai.utils.KeyUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -24,7 +21,7 @@ public class SellerInfoRepositoryTest {
     @Test
     public void save(){
         SellerInfo sellerInfo = new SellerInfo();
-        sellerInfo.setSellerId(KeyUtil.genUniqueKey());
+        sellerInfo.setSellerId(KeyUtil.getUniqueKey());
         sellerInfo.setPassword("meimei");
         sellerInfo.setOpenid("ooo");
         sellerInfo.setUsername("meimei");

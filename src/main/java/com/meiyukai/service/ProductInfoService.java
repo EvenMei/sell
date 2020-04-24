@@ -66,6 +66,14 @@ public interface ProductInfoService {
     public void deleteProductById(String productId);
 
 
+    /**
+     * 根据ProductStatus 和 CategoryType 查询商品
+     */
+    List<ProductInfo>  findByProductStatusAndAndCategoryType(Integer productStatus , Integer categoryType);
+
+
+
+
 
 
 

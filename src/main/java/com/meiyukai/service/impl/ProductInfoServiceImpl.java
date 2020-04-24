@@ -105,4 +105,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
 
+
+    @Override
+    public List<ProductInfo> findByProductStatusAndAndCategoryType(Integer productStatus, Integer categoryType) {
+        return productInfoRepository.findByProductStatusAndAndCategoryType(productStatus , categoryType);
+    }
+
+
 }

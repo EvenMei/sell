@@ -23,6 +23,10 @@ public interface OrderService {
     Page<OrderDTO> findAllOrderList(Pageable pageable);
 
 
+    /**根据openid 查询所有的 orderDTO**/
+    List<OrderDTO> findAllByOpenid(String openid);
+
+
 
     /**  取消订单 **/
     OrderDTO cancel(OrderDTO orderDTO);
@@ -35,6 +39,19 @@ public interface OrderService {
 
     /**   获取订单详情  **/
     List<String> getOrderName(OrderDTO orderDTO);
+
+    /**
+     * 根据openid 查询所有的OrderMaster
+     */
+
+    List<OrderMaster> findAll(String openid );
+
+
+    /**
+     * 根据openid 和订单号删除订单
+     */
+
+    void delete(String orderId  , String openid);
 
 
 

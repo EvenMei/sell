@@ -34,21 +34,17 @@ public class PayController {
                                                         @RequestParam(value = "returnUrl") String returnUrl ,
                                                             Map<String , Object> map){
 
-
-
-
         ModelAndView mav = new ModelAndView();
-
 
         // 1.查询订单
         OrderDTO orderDTO = orderService.findOne(orderId);
-        if (orderDTO == null){
-            log.error("【查询订单】订单不存在 orderId ={} " , orderId);
-            throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
-        }
-
 
         try{
+            if (orderDTO == null){
+                log.error("【查询订单】订单不存在 orderId ={} " , orderId);
+                throw new SellException(ResultEnum.ORDER_NOT_EXISTS);
+            }
+
             if (orderDTO.getOrderStatus()!= OrderStatusEnum.NEW.getCode()){
                 log.error("【微信支付】订单状态错误 orderStaus={}" , orderDTO.getOrderStatus());
                 throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
@@ -60,8 +56,6 @@ public class PayController {
             mav.setViewName("common/error");
             return mav;
         }
-
-
 
 
         //2.发起支付

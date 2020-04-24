@@ -9,7 +9,8 @@
 
     <script>
         function finish() {
-            location.href="/sell/seller/order/finish?orderId=${orderDTO.orderId}";
+            <#--location.href="/sell/seller/order/finish?orderId=${orderDTO.orderId}";-->
+            window.location.href="/sell/seller/order/toDeliver?orderId=${orderDTO.orderId}";
         }
 
         function cancel() {
@@ -32,10 +33,6 @@
             <#--侧边栏-->
             <#include  "../common/sidebar.ftl">
             <#--侧边栏-->
-
-
-
-
 
 
             <#--内容区域-->
@@ -124,11 +121,11 @@
                             <div class="col-md-12 column">
 
                                 <#if orderDTO.orderStatus == 0 >
-                                    <button type="button" class="btn btn-lg btn-success"  onclick="finish()">完结订单</button>
+                                    <button type="button" class="btn btn-lg btn-success"  onclick="finish()">发货</button>
                                 </#if>
 
                                 <#if orderDTO.orderStatus !=0 >
-                                    <button type="button" class="btn btn-lg btn-success"  onclick="finish()" disabled="disabled">完结订单</button>
+                                    <button type="button" class="btn btn-lg btn-success"  onclick="finish()" disabled="disabled">发货</button>
                                 </#if>
 
 

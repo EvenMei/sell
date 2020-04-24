@@ -89,7 +89,6 @@ public class PayServiceImpl implements PayService {
             throw new SellException(ResultEnum.WECHAT_NOTIFY_MONEY_VARIFY_ERROR);
         }
 
-
         //修改订单
         orderService.paid(orderDTO);
 

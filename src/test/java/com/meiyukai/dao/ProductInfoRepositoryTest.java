@@ -1,6 +1,7 @@
 package com.meiyukai.dao;
 
 import com.meiyukai.domain.ProductInfo;
+import com.meiyukai.utils.JsonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,12 @@ public class ProductInfoRepositoryTest {
     public void findByProductStatusTest(){
         List<ProductInfo> productInfoStatus = productInfoRepository.findByProductStatus(0);
         System.out.println("-------- -------statusSize  :   -------- -------" +productInfoStatus.size() );
+    }
+
+    @Test
+    public void  findByProductStatusAndAndCategoryTypeTest(){
+        List<ProductInfo> productInfoList = productInfoRepository.findByProductStatusAndAndCategoryType(0,1);
+        System.out.println("productInfoList: " + JsonUtil.toJson(productInfoList));
     }
 
 

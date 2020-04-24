@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://118.31.19.39:3306/sell?characterEncoding=utf-8
+    url: jdbc:mysql://118.31.19.39:3306/sell?characterEncoding=utf-8&useSSL=false
     username: root
     password: root
     hikari:
@@ -46,13 +46,16 @@ wechat:
     keyPath: /Users/meiyukai/Documents/wechat_cert/1579677461_20200315_cert/apiclient_cert.p12
     notifyUrl: http://xiaomei.natapp1.cc/sell/pay/notify
     templateId:
-      orderStatus: x3iOphxcZYLWn37oy_gZpccqSSrXryXj7Zgz6haqKrA
+      orderDeliver: YF6RV-nZHfSYZcFtu5LJ45YGDfjvCpMq7dmy6gIb3Fc
       newOrder: ZkWoJZftcl0pa6pj5X2JW78L6fDAr_0nJtcuKdNNdbU
       paid: -8QG_kNkMaHQjPVWrwfnEONNk5JhhBQ2pssmeAaHvOg
-      avaOpenid: oRKFQs8sCCRMn-i-652xmvTQ6kr4
+      avaOpenid: oRKFQs6eBbHAJlvc-IJwUGhMG22c
       buyerCancel: xnA45llXUXgMrmHUw2M_smiviXroDqFIQSz4OPRGCpY
       sellerCancel: t975WHy2HM7Yj9dtUpB7XHFd7dksZSAnWnAM5I-RTZo
 
+sf:
+  appid: 193251
+  sign: d4b4da5480b54c2c8a70c4b5bb37342b
 
 
 
@@ -69,6 +72,6 @@ mybatis:
 
 url:
   wechatMpAuthorize: http://xiaomei.natapp1.cc/sell/wechat/userInfo
-  sell:
+  sell: http://xiaomei.natapp1.cc/sell/
 
 

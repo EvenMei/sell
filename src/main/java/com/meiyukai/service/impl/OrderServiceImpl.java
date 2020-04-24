@@ -1,6 +1,5 @@
 package com.meiyukai.service.impl;
 
-import com.lly835.bestpay.model.RefundResponse;
 import com.meiyukai.converter.OrderMaster2OrderDTOConverter;
 import com.meiyukai.dao.OrderDetailRepository;
 import com.meiyukai.dao.OrderMasterRepository;
@@ -14,15 +13,13 @@ import com.meiyukai.enums.PayStatusEnum;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import com.meiyukai.service.*;
-import com.meiyukai.utils.JsonUtil;
 import com.meiyukai.utils.KeyUtil;
+import com.meiyukai.utils.OrderMaster2OrderDTOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +56,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private WebSocket webSocket;
 
+    @Autowired
+    private OrderMaster2OrderDTOUtils orderMaster2OrderDTOUtils;
 
             
             
@@ -67,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
 
-        String orderId = KeyUtil.genUniqueKey();
+        String orderId = KeyUtil.getUniqueKey();
         BigDecimal orderAmount = new BigDecimal(0);
 //        ArrayList<CartDTO> cartDTOList = new ArrayList<>();
 
@@ -89,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
             // 订单详情入库
 
             orderDetail.setOrderId(orderId);
-            orderDetail.setDetailId(KeyUtil.genUniqueKey());
+            orderDetail.setDetailId(KeyUtil.getUniqueKey());
             orderDetailRepository.save(orderDetail);
 
 
@@ -144,9 +142,10 @@ public class OrderServiceImpl implements OrderService {
 
 
 
+
+
     @Override
     public Page<OrderDTO> findOrderList(String buyerOpenid, Pageable pageable) {
-
         Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
         return new PageImpl<OrderDTO>(orderDTOList, pageable , orderMasterPage.getTotalElements() );
@@ -157,11 +156,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<OrderDTO> findAllOrderList(Pageable pageable) {
         Page<OrderMaster> orderList = orderMasterRepository.findAll(pageable);
-
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderList.getContent());
         Page page = new PageImpl(orderDTOList , pageable , orderList.getTotalElements());
          return  page;
     }
+
+
+
+    @Override
+    public List<OrderDTO> findAllByOpenid(String openid) {
+        List<OrderMaster> orderMasterList = orderMasterRepository.findAllByBuyerOpenid(openid);
+        List<OrderDTO> orderDTOList = orderMaster2OrderDTOUtils.convert(orderMasterList);
+        return orderDTOList;
+    }
+
+
+
+
 
     @Override
     @Transactional
@@ -213,7 +224,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO finish(OrderDTO orderDTO) {
 
         // 判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
+        if ( (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode()) )  || (!orderDTO.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) ){
             log.error("【完结订单】 订单状态错误  orderDTO={}" , orderDTO);
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
@@ -221,16 +232,16 @@ public class OrderServiceImpl implements OrderService {
 
         //修改订单状态
         OrderMaster orderMaster =  new OrderMaster();
-        orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        orderDTO.setOrderStatus(OrderStatusEnum.DELIVERED.getCode());
         BeanUtils.copyProperties(orderDTO , orderMaster);
         OrderMaster orderMasterUpdate = orderMasterRepository.save(orderMaster);
         if (orderMasterUpdate == null){
-            log.error("【完结订单】更新失败  orderMaster={}" , orderMaster);
+            log.error("【订单发货】更新失败  orderMaster={}" , orderMaster);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
 
         //推送微信模板消息
-        pushMessageService.orderStatus(orderDTO);
+        pushMessageService.orderDeliver(orderDTO);
         return orderDTO;
     }
 
@@ -259,13 +270,10 @@ public class OrderServiceImpl implements OrderService {
             log.error("【支付】 订单支付失败  orderDTO={} " , orderDTO);
             throw new SellException(ResultEnum.ORDER_UPDATE_ERROR);
         }
+
         //推送微信模板消息
         pushMessageService.paid(orderDTO); // 通知客户成功下单
-
         pushMessageService.newOrder(orderDTO); // 通知商家有新的订单
-
-
-
         return orderDTO;
     }
 
@@ -275,5 +283,37 @@ public class OrderServiceImpl implements OrderService {
         List<String> orderName = orderDetailList.stream().map(e -> e.getProductName()).collect(Collectors.toList());
         return orderName;
     }
+
+    @Override
+    public List<OrderMaster> findAll(String openid) {
+        return orderMasterRepository.findAllByBuyerOpenid(openid);
+    }
+
+    /**
+     * 根据 openid 和 订单号删除订单
+     * @param orderId 订单号
+     * @param openid
+     */
+    @Override
+    public void delete(String orderId, String openid) {
+       OrderMaster orderMaster = orderMasterRepository.findById(orderId).get();
+       //先判断是否是自己的订单
+       if (orderMaster.getBuyerOpenid().equals(openid)){
+           List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
+           try{
+               //先删除从订单
+               for (OrderDetail orderDetail : orderDetailList){
+                   orderDetailRepository.deleteByOrderId(orderDetail.getOrderId());
+               }
+               //再删除主订单
+               orderMasterRepository.deleteByOrderId(orderId);
+           }catch(Exception e){
+               log.error("【删除订单】 e= {}", e.getMessage());
+           }
+       }
+    }
+
+
+
 
 }

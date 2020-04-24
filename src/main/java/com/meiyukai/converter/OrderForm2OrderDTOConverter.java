@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.meiyukai.domain.OrderDetail;
 import com.meiyukai.dto.OrderDTO;
+import com.meiyukai.dto.Product;
 import com.meiyukai.enums.ResultEnum;
 import com.meiyukai.exception.SellException;
 import com.meiyukai.form.OrderForm;
@@ -31,6 +32,8 @@ public class OrderForm2OrderDTOConverter {
         List<OrderDetail> orderDetailList = new ArrayList<>();
         try{
              orderDetailList = gson.fromJson(orderForm.getItems() , new TypeToken<List<OrderDetail>>(){}.getType()); //使用 gson 转换成对象
+//            orderDetailList = gson.fromJson(orderForm.getItems() , new TypeToken<List<OrderDetail>>(){}.getType()); //使用 gson 转换成对象
+
         }catch (Exception e){
             log.error("【gson】 items 转换出错  items={} "  , orderForm.getItems());
             throw new SellException(ResultEnum.PARAM_ERROR); // items 参数不正确
